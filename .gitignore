@@ -1,0 +1,5 @@
+*.psd
+*.tmp
+*.zip
+# Si tienes una carpeta entera de archivos pesados:
+/basura/
