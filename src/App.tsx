@@ -2,30 +2,54 @@ import { useState, useEffect, useRef } from 'react'
 import './App.css'
 
 const images = [
-  { id: 1, src: '/images/bikini-1.jpg', alt: 'Bikini Punk 1' },
-  { id: 2, src: '/images/bikini-2.jpg', alt: 'Bikini Punk 2' },
-  { id: 3, src: '/images/bikini-3.jpg', alt: 'Bikini Punk 3' },
-  { id: 4, src: '/images/bikini-4.jpg', alt: 'Bikini Punk 4' },
-  { id: 5, src: '/images/bikini-5.jpg', alt: 'Bikini Punk 5' },
-  { id: 6, src: '/images/bikini-6.jpg', alt: 'Bikini Punk 6' },
+  { id: 1, src: '/images/bikini1.jpeg', alt: 'Bikini Punk 1' },
+  { id: 2, src: '/images/bikini2.jpeg', alt: 'Bikini Punk 2' },
+  { id: 3, src: '/images/bikini3.jpeg', alt: 'Bikini Punk 3' },
+  { id: 4, src: '/images/bikini4.jpeg', alt: 'Bikini Punk 4' },
+  { id: 5, src: '/images/bikini5.jpeg', alt: 'Bikini Punk 5' },
+  { id: 6, src: '/images/bikini6.jpeg', alt: 'Bikini Punk 6' },
 ]
 
 function App() {
   const [scrollY, setScrollY] = useState(0)
   const [selectedImage, setSelectedImage] = useState<number | null>(null)
-  const [imageOrder, setImageOrder] = useState(images.map((img) => img.id))
   const [isClosing, setIsClosing] = useState(false)
   const [clickedImageRect, setClickedImageRect] = useState<DOMRect | null>(null)
+  const [isMusicPlaying, setIsMusicPlaying] = useState(false)
+  const [hasScrolled, setHasScrolled] = useState(false)
+  const [showSpeaker, setShowSpeaker] = useState(false)
   const imageRefs = useRef<Map<number, HTMLDivElement>>(new Map())
+  const audioRef = useRef<HTMLAudioElement>(null)
 
   useEffect(() => {
     const handleScroll = () => {
       setScrollY(window.scrollY)
+
+      // Auto-play music on first scroll
+      if (window.scrollY > 0 && !hasScrolled && audioRef.current) {
+        setHasScrolled(true)
+        setIsMusicPlaying(true)
+        setShowSpeaker(true)
+        audioRef.current.play().catch(err => console.log('Audio play failed:', err))
+      }
     }
 
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+  }, [hasScrolled])
+
+  // Handle speaker toggle
+  const handleSpeakerToggle = () => {
+    if (audioRef.current) {
+      if (isMusicPlaying) {
+        audioRef.current.pause()
+        setIsMusicPlaying(false)
+      } else {
+        audioRef.current.play().catch(err => console.log('Audio play failed:', err))
+        setIsMusicPlaying(true)
+      }
+    }
+  }
 
   const handleImageClick = (id: number) => {
     // Get the clicked image's position and size
@@ -35,11 +59,6 @@ function App() {
       setClickedImageRect(rect)
     }
 
-    setImageOrder((prev) => {
-      const newOrder = prev.filter((imgId) => imgId !== id)
-      newOrder.push(id)
-      return newOrder
-    })
     setSelectedImage(id)
     setIsClosing(false)
   }
@@ -55,7 +74,7 @@ function App() {
 
   // Window height
   const vh = typeof window !== 'undefined' ? window.innerHeight : 800
-  
+
   // Section 1: Cards (0 - 400vh) - reveals all 6 cards progressively
   const section1Progress = Math.min(Math.max(scrollY / (vh * 4), 0), 1)
   const visibleCount = Math.max(0, Math.ceil(section1Progress * images.length))
@@ -76,7 +95,7 @@ function App() {
   // Calculate modal image position for smooth transition
   const getModalImageStyle = () => {
     if (!clickedImageRect || selectedImage === null) return {}
-    
+
     if (isClosing) {
       // Closing: animate back to original position
       return {
@@ -88,13 +107,13 @@ function App() {
         transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
       }
     }
-    
+
     // Opening: animate from original position to center
     const targetWidth = Math.min(window.innerWidth * 0.9, 768)
     const targetHeight = window.innerHeight * 0.85
     const targetLeft = (window.innerWidth - targetWidth) / 2
     const targetTop = (window.innerHeight - targetHeight) / 2
-    
+
     return {
       position: 'fixed' as const,
       top: targetTop,
@@ -107,34 +126,52 @@ function App() {
 
   return (
     <div className="relative">
-      {/* Noise Overlay - covers everything */}
-      <div className="noise-overlay" />
+
+      {/* Audio Element */}
+      <audio ref={audioRef} loop>
+        <source src="/music.mp3" type="audio/mpeg" />
+      </audio>
+
+      {/* Speaker Icon - Only shows after music starts */}
+      {showSpeaker && (
+        <button
+          onClick={handleSpeakerToggle}
+          className="fixed top-8 right-8 z-50 w-12 h-12 bg-white/10 hover:bg-white/20 text-white text-2xl border border-white/30 transition-all duration-300 flex items-center justify-center rounded-full"
+          style={{ backdropFilter: 'blur(10px)' }}
+          aria-label={isMusicPlaying ? 'Mute music' : 'Unmute music'}
+        >
+          {isMusicPlaying ? '🔊' : '🔇'}
+        </button>
+      )}
 
       {/* SECTION 1: Hero + Cards */}
-      <div 
+      <div
         className="sticky top-0 h-screen flex flex-col items-center justify-center overflow-hidden transition-opacity duration-500"
-        style={{ 
+        style={{
           opacity: showSection2 ? 0 : 1,
           pointerEvents: showSection2 ? 'none' : 'auto',
           zIndex: 10
         }}
       >
         {/* Brand Name with Glitch Effect */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div className="glitch-wrapper" style={{ opacity: cardsComplete ? 0 : 1 }}>
-            <h1 className="glitch text-[15vw] font-black text-white/10 tracking-tighter select-none" data-text="RAISA">
-              RAISA
-            </h1>
-          </div>
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none glitch-container">
+          <h1 className="text-[15vw] font-black text-white/10 tracking-tighter select-none glitch-layer main">
+            RAISA
+          </h1>
+          <h1 className="text-[15vw] font-black tracking-tighter select-none glitch-layer layer1 text-[#ff00ff]/20" aria-hidden="true">
+            RAISA
+          </h1>
+          <h1 className="text-[15vw] font-black tracking-tighter select-none glitch-layer layer2 text-[#00ffff]/20" aria-hidden="true">
+            RAISA
+          </h1>
         </div>
 
         {/* Cards Container */}
         <div className="relative w-[320px] h-[480px] sm:w-[380px] sm:h-[570px]">
           {images.map((image, index) => {
             const isVisible = index < visibleCount
-            const orderIndex = imageOrder.indexOf(image.id)
-            const zIndex = orderIndex + 1
-            
+            const zIndex = index + 1
+
             const baseOffset = index * 8
             const scrollOffset = section1Progress * 30 * index
             const translateY = isVisible ? baseOffset - scrollOffset : 100
@@ -171,7 +208,7 @@ function App() {
         </div>
 
         {/* Scroll hint */}
-        <div 
+        <div
           className="absolute bottom-8 left-1/2 -translate-x-1/2 transition-opacity duration-300"
           style={{ opacity: cardsComplete ? 0 : 0.5 }}
         >
@@ -185,31 +222,32 @@ function App() {
       <div style={{ height: '400vh' }} />
 
       {/* SECTION 2: Logo SVG */}
-      <div 
+      <div
         className="sticky top-0 h-screen flex items-center justify-center overflow-hidden"
-        style={{ 
+        style={{
           opacity: section2Active ? 1 : showSection3 ? 0 : 0,
           pointerEvents: section2Active ? 'auto' : 'none',
           zIndex: 20
         }}
       >
-        <div 
-          className="transition-all duration-700 ease-out"
-          style={{ 
+        <div
+          className="transition-all duration-700 ease-out glitch-container"
+          style={{
             transform: `scale(${0.5 + section2Progress * 0.5}) translateY(${(1 - section2Progress) * 50}px)`,
-            opacity: section2Progress < 0.8 ? section2Progress : 1 - (section2Progress - 0.8) * 5
+            opacity: section2Progress < 0.3 ? section2Progress / 0.3 : (section2Progress > 0.6 ? 1 - (section2Progress - 0.6) / 0.4 : 1)
           }}
         >
-          <svg 
-            viewBox="0 0 400 120" 
-            className="w-[80vw] max-w-2xl"
+          {/* Main Layer */}
+          <svg
+            viewBox="0 0 400 120"
+            className="w-[80vw] max-w-2xl glitch-layer main"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <text 
-              x="50%" 
-              y="50%" 
-              dominantBaseline="middle" 
+            <text
+              x="50%"
+              y="50%"
+              dominantBaseline="middle"
               textAnchor="middle"
               fill="white"
               className="text-6xl font-black tracking-tight"
@@ -217,14 +255,78 @@ function App() {
             >
               RAISA
             </text>
-            <text 
-              x="50%" 
-              y="85%" 
-              dominantBaseline="middle" 
+            <text
+              x="50%"
+              y="85%"
+              dominantBaseline="middle"
               textAnchor="middle"
               fill="white"
               className="text-xl font-light tracking-[0.5em]"
               style={{ fontFamily: 'system-ui, sans-serif' }}
+            >
+              BIKINIS
+            </text>
+          </svg>
+
+          {/* Glitch Layer 1 */}
+          <svg
+            viewBox="0 0 400 120"
+            className="w-[80vw] max-w-2xl glitch-layer layer1"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+          >
+            <text
+              x="50%"
+              y="50%"
+              dominantBaseline="middle"
+              textAnchor="middle"
+              fill="#ff00ff"
+              className="text-6xl font-black tracking-tight"
+              style={{ fontFamily: 'system-ui, sans-serif', opacity: 0.8 }}
+            >
+              RAISA
+            </text>
+            <text
+              x="50%"
+              y="85%"
+              dominantBaseline="middle"
+              textAnchor="middle"
+              fill="#ff00ff"
+              className="text-xl font-light tracking-[0.5em]"
+              style={{ fontFamily: 'system-ui, sans-serif', opacity: 0.8 }}
+            >
+              BIKINIS
+            </text>
+          </svg>
+
+          {/* Glitch Layer 2 */}
+          <svg
+            viewBox="0 0 400 120"
+            className="w-[80vw] max-w-2xl glitch-layer layer2"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+          >
+            <text
+              x="50%"
+              y="50%"
+              dominantBaseline="middle"
+              textAnchor="middle"
+              fill="#00ffff"
+              className="text-6xl font-black tracking-tight"
+              style={{ fontFamily: 'system-ui, sans-serif', opacity: 0.8 }}
+            >
+              RAISA
+            </text>
+            <text
+              x="50%"
+              y="85%"
+              dominantBaseline="middle"
+              textAnchor="middle"
+              fill="#00ffff"
+              className="text-xl font-light tracking-[0.5em]"
+              style={{ fontFamily: 'system-ui, sans-serif', opacity: 0.8 }}
             >
               BIKINIS
             </text>
@@ -236,9 +338,9 @@ function App() {
       <div style={{ height: '200vh' }} />
 
       {/* SECTION 3: Email with Tartan */}
-      <div 
-        className="sticky top-0 h-screen flex items-center justify-center overflow-hidden tartan-bg"
-        style={{ 
+      <div
+        className="sticky top-0 h-screen flex items-center justify-center overflow-hidden"
+        style={{
           opacity: showSection3 ? section3Progress : 0,
           pointerEvents: showSection3 ? 'auto' : 'none',
           zIndex: 30
@@ -246,17 +348,17 @@ function App() {
       >
         {/* Dark overlay for better contrast */}
         <div className="absolute inset-0 bg-black/40" />
-        
-        <div 
+
+        <div
           className="relative z-10 text-center transition-transform duration-700 ease-out"
-          style={{ 
+          style={{
             transform: `translateY(${(1 - section3Progress) * 100}px)`,
           }}
         >
           <p className="text-white/60 text-sm tracking-[0.3em] uppercase mb-6">
             Contacto
           </p>
-          <a 
+          <a
             href="mailto:hello@raisabikinis.com"
             className="text-white text-2xl sm:text-4xl md:text-5xl font-light tracking-wide hover:text-white/80 transition-colors"
           >
@@ -272,7 +374,7 @@ function App() {
       {selectedImage !== null && (
         <div
           className={`fixed inset-0 z-[100] flex items-center justify-center ${isClosing ? 'bg-black/0' : 'bg-black/90'}`}
-          style={{ 
+          style={{
             transition: 'background-color 0.4s ease',
             backdropFilter: isClosing ? 'blur(0px)' : 'blur(8px)'
           }}

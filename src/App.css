@@ -5,254 +5,21 @@ html {
 }
 
 body {
-  background: #0a0a0a;
+  background: #000000;
   min-height: 100vh;
   overflow-x: hidden;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dominant-baseline='central' font-size='20' fill='white'%3E🤘%3C/text%3E%3C/svg%3E") 12 12, pointer;
 }
 
-/* Noise Overlay - covers entire screen */
-.noise-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  pointer-events: none;
-  z-index: 9999;
-  opacity: 0.08;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-  background-repeat: repeat;
-  animation: noise 0.5s steps(10) infinite;
+* {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dominant-baseline='central' font-size='20' fill='white'%3E🤘%3C/text%3E%3C/svg%3E") 12 12, pointer;
 }
 
-@keyframes noise {
-  0%, 100% { transform: translate(0, 0); }
-  10% { transform: translate(-2%, -2%); }
-  20% { transform: translate(2%, 2%); }
-  30% { transform: translate(-1%, 1%); }
-  40% { transform: translate(1%, -1%); }
-  50% { transform: translate(-2%, 2%); }
-  60% { transform: translate(2%, -2%); }
-  70% { transform: translate(-1%, -1%); }
-  80% { transform: translate(1%, 1%); }
-  90% { transform: translate(-2%, -1%); }
-}
 
-/* GLITCH EFFECT for RAISA */
-.glitch-wrapper {
-  position: relative;
-  transition: opacity 0.5s ease;
-}
 
-.glitch {
-  position: relative;
-  color: rgba(255, 255, 255, 0.1);
-  animation: glitch-skew 3s infinite linear alternate-reverse;
-}
 
-.glitch::before,
-.glitch::after {
-  content: attr(data-text);
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
 
-.glitch::before {
-  left: 2px;
-  text-shadow: -2px 0 #ff0000;
-  clip: rect(24px, 550px, 90px, 0);
-  animation: glitch-anim-1 2s infinite linear alternate-reverse;
-}
 
-.glitch::after {
-  left: -2px;
-  text-shadow: -2px 0 #00ffff;
-  clip: rect(85px, 550px, 140px, 0);
-  animation: glitch-anim-2 2s infinite linear alternate-reverse;
-}
-
-@keyframes glitch-anim-1 {
-  0% {
-    clip: rect(20px, 9999px, 15px, 0);
-    transform: skew(0.5deg);
-  }
-  10% {
-    clip: rect(80px, 9999px, 90px, 0);
-    transform: skew(-0.5deg);
-  }
-  20% {
-    clip: rect(10px, 9999px, 50px, 0);
-    transform: skew(0.3deg);
-  }
-  30% {
-    clip: rect(60px, 9999px, 70px, 0);
-    transform: skew(-0.3deg);
-  }
-  40% {
-    clip: rect(30px, 9999px, 40px, 0);
-    transform: skew(0.6deg);
-  }
-  50% {
-    clip: rect(90px, 9999px, 100px, 0);
-    transform: skew(-0.6deg);
-  }
-  60% {
-    clip: rect(15px, 9999px, 25px, 0);
-    transform: skew(0.4deg);
-  }
-  70% {
-    clip: rect(70px, 9999px, 80px, 0);
-    transform: skew(-0.4deg);
-  }
-  80% {
-    clip: rect(40px, 9999px, 55px, 0);
-    transform: skew(0.7deg);
-  }
-  90% {
-    clip: rect(5px, 9999px, 20px, 0);
-    transform: skew(-0.7deg);
-  }
-  100% {
-    clip: rect(55px, 9999px, 65px, 0);
-    transform: skew(0.2deg);
-  }
-}
-
-@keyframes glitch-anim-2 {
-  0% {
-    clip: rect(65px, 9999px, 75px, 0);
-    transform: skew(-0.5deg);
-  }
-  10% {
-    clip: rect(5px, 9999px, 20px, 0);
-    transform: skew(0.5deg);
-  }
-  20% {
-    clip: rect(45px, 9999px, 60px, 0);
-    transform: skew(-0.3deg);
-  }
-  30% {
-    clip: rect(85px, 9999px, 95px, 0);
-    transform: skew(0.3deg);
-  }
-  40% {
-    clip: rect(25px, 9999px, 35px, 0);
-    transform: skew(-0.6deg);
-  }
-  50% {
-    clip: rect(55px, 9999px, 70px, 0);
-    transform: skew(0.6deg);
-  }
-  60% {
-    clip: rect(95px, 9999px, 105px, 0);
-    transform: skew(-0.4deg);
-  }
-  70% {
-    clip: rect(35px, 9999px, 45px, 0);
-    transform: skew(0.4deg);
-  }
-  80% {
-    clip: rect(75px, 9999px, 85px, 0);
-    transform: skew(-0.7deg);
-  }
-  90% {
-    clip: rect(15px, 9999px, 30px, 0);
-    transform: skew(0.7deg);
-  }
-  100% {
-    clip: rect(50px, 9999px, 60px, 0);
-    transform: skew(-0.2deg);
-  }
-}
-
-@keyframes glitch-skew {
-  0% {
-    transform: skew(0deg);
-  }
-  20% {
-    transform: skew(-1deg);
-  }
-  40% {
-    transform: skew(1deg);
-  }
-  60% {
-    transform: skew(-0.5deg);
-  }
-  80% {
-    transform: skew(0.5deg);
-  }
-  100% {
-    transform: skew(0deg);
-  }
-}
-
-/* Tartan Pattern Background - Punk Style */
-.tartan-bg {
-  background: 
-    repeating-linear-gradient(
-      90deg,
-      transparent,
-      transparent 20px,
-      rgba(0, 0, 0, 0.3) 20px,
-      rgba(0, 0, 0, 0.3) 40px
-    ),
-    repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 20px,
-      rgba(0, 0, 0, 0.3) 20px,
-      rgba(0, 0, 0, 0.3) 40px
-    ),
-    repeating-linear-gradient(
-      90deg,
-      #1a0000 0px,
-      #1a0000 10px,
-      #330000 10px,
-      #330000 20px,
-      #000000 20px,
-      #000000 30px,
-      #4d0000 30px,
-      #4d0000 40px
-    ),
-    repeating-linear-gradient(
-      0deg,
-      #1a0000 0px,
-      #1a0000 10px,
-      #330000 10px,
-      #330000 20px,
-      #000000 20px,
-      #000000 30px,
-      #4d0000 30px,
-      #4d0000 40px
-    );
-  background-blend-mode: multiply, multiply, normal, normal;
-}
-
-/* Alternative tartan with more contrast */
-.tartan-bg::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: 
-    repeating-linear-gradient(
-      45deg,
-      transparent,
-      transparent 35px,
-      rgba(139, 0, 0, 0.4) 35px,
-      rgba(139, 0, 0, 0.4) 70px
-    ),
-    repeating-linear-gradient(
-      -45deg,
-      transparent,
-      transparent 35px,
-      rgba(0, 0, 0, 0.5) 35px,
-      rgba(0, 0, 0, 0.5) 70px
-    );
-  pointer-events: none;
-}
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {
@@ -296,4 +63,120 @@ body {
 /* Modal image smooth transition */
 .modal-image-container {
   will-change: top, left, width, height;
+}
+
+/* ----------------------------------------------------- */
+/* GLITCH EFFECT */
+/* ----------------------------------------------------- */
+
+.glitch-container {
+  position: relative;
+  /* Ensure the layers align perfectly */
+}
+
+/* All layers share these base styles */
+.glitch-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* 
+   Layer 1: Red channel jitter 
+   clip-path creates "slices" visible at certain times
+*/
+.glitch-layer.layer1 {
+  animation: glitch-anim-1 2.5s infinite linear alternate-reverse;
+  opacity: 0.7;
+  mix-blend-mode: hard-light;
+  /* Slight tint if desired, or relying on offset for color fringing? 
+     For SVGs, color manipulation is harder without filters.
+     Here we just offset. 
+  */
+}
+
+/* 
+   Layer 2: Blue channel jitter 
+*/
+.glitch-layer.layer2 {
+  animation: glitch-anim-2 2s infinite linear alternate-reverse;
+  opacity: 0.7;
+  mix-blend-mode: hard-light;
+}
+
+/* The main layer should be on top or bottom? 
+   If main is static, these layers flicker on top.
+*/
+.glitch-layer.main {
+  position: relative;
+  /* Takes up space */
+  z-index: 2;
+}
+
+
+/* Keyframes creating random slice movements */
+@keyframes glitch-anim-1 {
+  0% {
+    clip-path: inset(20% 0 80% 0);
+    transform: translate(-5px, 2px);
+  }
+
+  20% {
+    clip-path: inset(60% 0 10% 0);
+    transform: translate(5px, -2px);
+  }
+
+  40% {
+    clip-path: inset(40% 0 50% 0);
+    transform: translate(-5px, 5px);
+  }
+
+  60% {
+    clip-path: inset(80% 0 5% 0);
+    transform: translate(5px, -5px);
+  }
+
+  80% {
+    clip-path: inset(10% 0 70% 0);
+    transform: translate(-2px, 5px);
+  }
+
+  100% {
+    clip-path: inset(50% 0 30% 0);
+    transform: translate(2px, -2px);
+  }
+}
+
+@keyframes glitch-anim-2 {
+  0% {
+    clip-path: inset(10% 0 60% 0);
+    transform: translate(5px, -2px);
+  }
+
+  20% {
+    clip-path: inset(80% 0 5% 0);
+    transform: translate(-5px, 5px);
+  }
+
+  40% {
+    clip-path: inset(30% 0 20% 0);
+    transform: translate(5px, 2px);
+  }
+
+  60% {
+    clip-path: inset(15% 0 80% 0);
+    transform: translate(-2px, -5px);
+  }
+
+  80% {
+    clip-path: inset(55% 0 10% 0);
+    transform: translate(2px, 5px);
+  }
+
+  100% {
+    clip-path: inset(40% 0 30% 0);
+    transform: translate(-5px, 2px);
+  }
 }
