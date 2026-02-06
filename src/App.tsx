@@ -16,27 +16,17 @@ function App() {
   const [isClosing, setIsClosing] = useState(false)
   const [clickedImageRect, setClickedImageRect] = useState<DOMRect | null>(null)
   const [isMusicPlaying, setIsMusicPlaying] = useState(false)
-  const [hasScrolled, setHasScrolled] = useState(false)
-  const [showSpeaker, setShowSpeaker] = useState(false)
   const imageRefs = useRef<Map<number, HTMLDivElement>>(new Map())
   const audioRef = useRef<HTMLAudioElement>(null)
 
   useEffect(() => {
     const handleScroll = () => {
       setScrollY(window.scrollY)
-
-      // Auto-play music on first scroll
-      if (window.scrollY > 0 && !hasScrolled && audioRef.current) {
-        setHasScrolled(true)
-        setIsMusicPlaying(true)
-        setShowSpeaker(true)
-        audioRef.current.play().catch(err => console.log('Audio play failed:', err))
-      }
     }
 
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [hasScrolled])
+  }, [])
 
   // Handle speaker toggle
   const handleSpeakerToggle = () => {
@@ -132,17 +122,15 @@ function App() {
         <source src="/music.mp3" type="audio/mpeg" />
       </audio>
 
-      {/* Speaker Icon - Only shows after music starts */}
-      {showSpeaker && (
-        <button
-          onClick={handleSpeakerToggle}
-          className="fixed top-8 right-8 z-50 w-12 h-12 bg-white/10 hover:bg-white/20 text-white text-2xl border border-white/30 transition-all duration-300 flex items-center justify-center rounded-full"
-          style={{ backdropFilter: 'blur(10px)' }}
-          aria-label={isMusicPlaying ? 'Mute music' : 'Unmute music'}
-        >
-          {isMusicPlaying ? '🔊' : '🔇'}
-        </button>
-      )}
+      {/* Speaker Icon - Toggle music on/off */}
+      <button
+        onClick={handleSpeakerToggle}
+        className="fixed top-8 right-8 z-50 w-12 h-12 bg-white/10 hover:bg-white/20 text-white text-2xl border border-white/30 transition-all duration-300 flex items-center justify-center rounded-full"
+        style={{ backdropFilter: 'blur(10px)' }}
+        aria-label={isMusicPlaying ? 'Mute music' : 'Unmute music'}
+      >
+        {isMusicPlaying ? '🔊' : '🔇'}
+      </button>
 
       {/* SECTION 1: Hero + Cards */}
       <div
@@ -156,13 +144,13 @@ function App() {
         {/* Brand Name with Glitch Effect */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none glitch-container">
           <h1 className="text-[15vw] font-black text-white/10 tracking-tighter select-none glitch-layer main">
-            RAISA
+            R A I S A
           </h1>
           <h1 className="text-[15vw] font-black tracking-tighter select-none glitch-layer layer1 text-[#ff00ff]/20" aria-hidden="true">
-            RAISA
+            R A I S A
           </h1>
           <h1 className="text-[15vw] font-black tracking-tighter select-none glitch-layer layer2 text-[#00ffff]/20" aria-hidden="true">
-            RAISA
+            R A I S A
           </h1>
         </div>
 
@@ -253,7 +241,7 @@ function App() {
               className="text-6xl font-black tracking-tight"
               style={{ fontFamily: 'system-ui, sans-serif' }}
             >
-              RAISA
+              R A I S A
             </text>
             <text
               x="50%"
@@ -285,7 +273,7 @@ function App() {
               className="text-6xl font-black tracking-tight"
               style={{ fontFamily: 'system-ui, sans-serif', opacity: 0.8 }}
             >
-              RAISA
+              R A I S A
             </text>
             <text
               x="50%"
@@ -317,7 +305,7 @@ function App() {
               className="text-6xl font-black tracking-tight"
               style={{ fontFamily: 'system-ui, sans-serif', opacity: 0.8 }}
             >
-              RAISA
+              R A I S A
             </text>
             <text
               x="50%"
@@ -359,10 +347,10 @@ function App() {
             Contacto
           </p>
           <a
-            href="mailto:hello@raisabikinis.com"
+            href="mailto:hello@raisa.com.ar"
             className="text-white text-2xl sm:text-4xl md:text-5xl font-light tracking-wide hover:text-white/80 transition-colors"
           >
-            hello@raisabikinis.com
+            hello@raisa.com.ar
           </a>
         </div>
       </div>
